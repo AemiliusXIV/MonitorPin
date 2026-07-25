@@ -1,0 +1,20 @@
+# Build output
+bin/
+obj/
+*.user
+
+# Runtime config (per-machine, never shipped)
+rules.json
+
+# Local dev tooling / logs — not for public repo
+dev-reload.ps1
+dev-build.log
+
+# Compiled installer output
+installer/output/
+
+# Local AI-assistant artifacts — not for public repo
+CLAUDE.md
+.claude/
+.claudeignore
+*.local.md

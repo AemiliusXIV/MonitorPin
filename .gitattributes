@@ -1,0 +1,13 @@
+# Normalize line endings so the repo stays consistent across machines.
+* text=auto
+
+# Windows-native project: keep these CRLF in the working tree.
+*.cs text eol=crlf
+*.csproj text eol=crlf
+*.manifest text eol=crlf
+*.iss text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary assets, never touch.
+*.ico binary
+*.png binary

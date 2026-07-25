@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>MonitorPin.ico</ApplicationIcon>
+    <AssemblyName>MonitorPin</AssemblyName>
+    <RootNamespace>MonitorPin</RootNamespace>
+    <Version>1.0.0.0</Version>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <Product>MonitorPin</Product>
+    <Company>AemiliusXIV</Company>
+    <Authors>AemiliusXIV</Authors>
+    <Description>Sends apps to the monitor and size you want, and force-minimizes fullscreen games.</Description>
+    <Copyright>Copyright (c) 2026 AemiliusXIV</Copyright>
+    <!-- Keep the shown version as plain "1.0.0" instead of "1.0.0+<commit sha>". -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+
+</Project>
