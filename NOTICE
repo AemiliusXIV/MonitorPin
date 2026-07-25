@@ -1,0 +1,13 @@
+MonitorPin
+Copyright (c) 2026 AemiliusXIV
+
+A Windows tray tool for placing application windows and force-minimizing
+fullscreen games.
+
+This application has no bundled third-party runtime dependencies. It is built
+on .NET and Windows Forms and calls the Windows API directly; those components
+are part of the .NET runtime and the operating system and are not redistributed
+by this project.
+
+The installer is produced with Inno Setup (https://jrsoftware.org/isinfo.php),
+a build-time tool that is not included in the application itself.

@@ -1,0 +1,82 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Set version from tag
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}".TrimStart('v')
+          (Get-Content MonitorPin.csproj -Raw) `
+            -replace '<Version>.*?</Version>', "<Version>$version.0</Version>" |
+            Set-Content MonitorPin.csproj -Encoding UTF8
+          (Get-Content installer/MonitorPin.iss -Raw) `
+            -replace '#define AppVersion "[^"]*"', "#define AppVersion `"$version`"" |
+            Set-Content installer/MonitorPin.iss -Encoding UTF8
+          "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+          Write-Host "Building version $version"
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+
+      - name: Build installer
+        shell: pwsh
+        run: ./installer/build-installer.ps1
+
+      - name: Checksums
+        shell: pwsh
+        run: |
+          $setup = "installer/output/MonitorPin-Setup-$env:VERSION.exe"
+          if (-not (Test-Path $setup)) { throw "installer not found: $setup" }
+          $hash = (Get-FileHash $setup -Algorithm SHA256).Hash.ToLower()
+          "$hash  MonitorPin-Setup-$env:VERSION.exe" |
+            Set-Content "installer/output/SHA256SUMS.txt" -Encoding ascii
+
+      - name: Create release and upload assets
+        shell: pwsh
+        run: |
+          $token = "${{ secrets.GITHUB_TOKEN }}"
+          $headers = @{
+            Authorization          = "Bearer $token"
+            Accept                 = "application/vnd.github+json"
+            "X-GitHub-Api-Version" = "2022-11-28"
+          }
+          $body = @{
+            tag_name = "${{ github.ref_name }}"
+            name     = "MonitorPin $env:VERSION"
+            body     = "See CHANGELOG.md for what's new in this version."
+          } | ConvertTo-Json
+          $release = Invoke-RestMethod `
+            -Uri "https://api.github.com/repos/${{ github.repository }}/releases" `
+            -Method Post -Headers $headers -Body $body -ContentType "application/json"
+          $assets = @(
+            "installer/output/MonitorPin-Setup-$env:VERSION.exe",
+            "installer/output/SHA256SUMS.txt"
+          )
+          foreach ($asset in $assets) {
+            $name = Split-Path $asset -Leaf
+            $uploadUri = $release.upload_url -replace '\{.*\}', "?name=$name"
+            $bytes = [IO.File]::ReadAllBytes("$PWD/$asset")
+            Invoke-RestMethod -Uri $uploadUri -Method Post -Headers $headers `
+              -Body $bytes -ContentType "application/octet-stream"
+            Write-Host "uploaded $name"
+          }
