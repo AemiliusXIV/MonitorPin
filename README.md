@@ -8,6 +8,8 @@ Send apps to the monitor and size you want when they open, and force-minimize fu
 
 Some apps always open on the wrong screen, at the wrong size, or hidden behind whatever you were doing. Windows has no setting to fix that per app. MonitorPin watches for windows as they open and puts each one where you told it to go, and it force-minimizes fullscreen games that ignore the normal minimize.
 
+![The MonitorPin main window with a few rules](docs/main-window.png)
+
 ## What it can do
 
 - Send an app to a chosen screen and decide how it opens: maximized, normal, minimized, or a size you pick. It re-applies a moment later, so apps that jump back to their own spot don't win.
@@ -35,6 +37,8 @@ MonitorPin isn't signed with a paid certificate, so the first time you run the i
 ## Using it
 
 Open it from the tray icon. Add a rule, pick the app and the screen, choose how it should open, and save. That's it, the rule kicks in the next time the app opens. Hotkeys, layouts, and screen names all live in the same window.
+
+![The Add rule window, showing the custom-size fields](docs/add-rule.png)
 
 ## Privacy
 
